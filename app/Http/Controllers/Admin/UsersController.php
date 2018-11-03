@@ -7,6 +7,9 @@ use App\User;
 use App\Photo;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Redirect;
 
 class UsersController extends Controller
 {
@@ -99,7 +102,9 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-        //
+        $roles = Role::all();
+        $user = User::find($id);
+        return view('admin.users.edit',compact('user','roles'));
     }
 
     /**
@@ -111,7 +116,61 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // $this->validate($request,[
+        //     'name'  => 'required|string|min:3',
+        //     'email' => 'required|email',
+        //     'photo_id' => 'required|image',
+        //     'role'   => 'required',
+        //     'status' => 'required',
+        //     'old_password' => 'required',
+        //     'password'  => 'required|confirmed|min:3'
+        // ]);
+
+        $user = User::find($id);
+        //dd($user->password);
+        $user->name = $request->input('name');
+        $user->email = $request->input('email');
+        $user->role_id = $request->input('role');
+        $user->is_active = $request->input('status');
+        //$user->password = bcrypt($request->input('password'));
+
+        $hashedPassword = $user->password;
+        if(Hash::check($request->old_password,$hashedPassword))
+        {
+            if(!Hash::check($request->password,$hashedPassword))
+            {
+                //  $user = User::find(Auth::id());
+                $user->password = bcrypt($request->password);
+                
+            }
+            else
+            {
+                return Redirect::back()->withErrors(['New password cannot be the same as old password']);
+            }
+        }
+        else
+        {
+            return Redirect::back()->withErrors(['Current old password not match']);
+        }
+        
+        
+        if($file = $request->file('photo_id'))
+        {
+            $imageName = time().$file->getClientOriginalName();
+            $file->move('images',$imageName);
+
+            $photo = new Photo;
+            $photo->file = $imageName;
+            $photo->save();
+
+
+            $user->photo_id = $photo->id;
+        }
+
+        
+        $user->save();
+        
+        return redirect()->back()->with('status','Updated user successfully');
     }
 
     /**
@@ -122,6 +181,10 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        //return $id;
+        $user = User::find($id);
+
+        // dd($user);
+        // return redirect()->back()->with('status','Delete successfully');
     }
 }

@@ -39,14 +39,21 @@
                                 @foreach ($users as $key => $user)
                                     <tr class="odd gradeX">
                                         <td>{{ ++$key }}</td>
-                                        <td>{{ $user->name }}</td>
+                                        {{-- using image atribiutes --}}
+                                        <td><img height="23" src="{{ $user->photo ? $user->photo->file : ' ' }}" alt=""> {{ $user->name }}</td>
                                         <td>{{ $user->email }}</td>
                                         <td>{{ $user->role->name }}</td>
                                         <td>{!! ($user->is_active == 1) ?  " <span class='btn btn-primary btn-xs'> Active </span> " : "<span class='btn btn-danger btn-xs'> Not Active </span>"  !!}</td>
                                         <td class="center">{{ $user->created_at->diffForHumans() }}</td>
                                         <td class="center">
-                                            <a class="btn btn-primary btn-xs" href="#"> <span class="fa fa-edit"></span> Edit </a>
-                                            <a class="btn btn-danger btn-xs" href="#"> <span class="glyphicon glyphicon-remove"></span> Delete </a>
+                                            <a class="btn btn-primary btn-xs" href="{{ route('admin.users.edit',['id'=>$user->id]) }}"> <span class="fa fa-edit"></span> Edit </a>
+
+                                            <a class="btn btn-danger btn-xs" href="{{ route('admin.users.destroy',['id'=>$user->id]) }}"> <span class="glyphicon glyphicon-remove"></span> Delete </a>
+                                            
+                                            <form action="{{ route('admin.users.destroy',['id'=>$user->id]) }}" method="POST" style="display:none;">
+                                                @csrf
+                                                @method('DELETE ')
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach
