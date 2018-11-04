@@ -22,6 +22,7 @@
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
+                    @include('admin.common.errors')
                     <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-user">
                         <thead>
                             <tr>
@@ -46,13 +47,12 @@
                                         <td>{!! ($user->is_active == 1) ?  " <span class='btn btn-primary btn-xs'> Active </span> " : "<span class='btn btn-danger btn-xs'> Not Active </span>"  !!}</td>
                                         <td class="center">{{ $user->created_at->diffForHumans() }}</td>
                                         <td class="center">
-                                            <a class="btn btn-primary btn-xs" href="{{ route('admin.users.edit',['id'=>$user->id]) }}"> <span class="fa fa-edit"></span> Edit </a>
-
-                                            <a class="btn btn-danger btn-xs" href="{{ route('admin.users.destroy',['id'=>$user->id]) }}"> <span class="glyphicon glyphicon-remove"></span> Delete </a>
-                                            
-                                            <form action="{{ route('admin.users.destroy',['id'=>$user->id]) }}" method="POST" style="display:none;">
+                                            <a class="btn btn-primary btn-xs pull-left" href="{{ route('admin.users.edit',['id'=>$user->id]) }}"> <span class="fa fa-edit"></span> Edit </a>
+                                                
+                                            <form action="{{ route('admin.users.destroy',$user->id) }}" method="POST" >
                                                 @csrf
-                                                @method('DELETE ')
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger btn-xs pull-right">Delete</button>
                                             </form>
                                         </td>
                                     </tr>

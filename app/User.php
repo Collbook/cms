@@ -38,13 +38,19 @@ class User extends Authenticatable
         return $this->belongsTo('App\Photo');
     }
 
+    public function posts()
+    {
+        return $this->hasMany('App\Post');
+    }
+    
     // middleware admin
     public function isAdmin()
     {
-        if($this->role->name == 'Admin')
+        if($this->role->name == 'Admin' && $this->is_active == 1)
         {
             return true;
         }
+        //$request->session()->flush('status','User is not active !');
         return false;
     }
 }

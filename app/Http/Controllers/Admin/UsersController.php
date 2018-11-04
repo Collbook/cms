@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rules\Exists;
 
 class UsersController extends Controller
 {
@@ -116,15 +117,16 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // $this->validate($request,[
-        //     'name'  => 'required|string|min:3',
-        //     'email' => 'required|email',
-        //     'photo_id' => 'required|image',
-        //     'role'   => 'required',
-        //     'status' => 'required',
-        //     'old_password' => 'required',
-        //     'password'  => 'required|confirmed|min:3'
-        // ]);
+        //return $id;
+        $this->validate($request,[
+            'name'  => 'required|string|min:3',
+            'email' => 'required|email',
+            'photo_id' => 'required|image',
+            'role'   => 'required',
+            'status' => 'required',
+            'old_password' => 'required',
+            'password'  => 'required|confirmed|min:3'
+        ]);
 
         $user = User::find($id);
         //dd($user->password);
@@ -181,10 +183,12 @@ class UsersController extends Controller
      */
     public function destroy($id)
     {
-        //return $id;
         $user = User::find($id);
-
-        // dd($user);
-        // return redirect()->back()->with('status','Delete successfully');
+        if(file_exists(public_path().$user->photo->file))
+        {
+            unlink(public_path().$user->photo->file);
+        }
+        $user->delete();
+        return redirect()->back()->with('status','Delete user successfully');
     }
 }

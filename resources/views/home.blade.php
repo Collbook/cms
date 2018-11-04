@@ -8,6 +8,7 @@
                 <div class="card-header">Dashboard</div>
 
                 <div class="card-body">
+                    @include('admin.common.errors')
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
