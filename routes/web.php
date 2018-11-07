@@ -28,6 +28,14 @@ Route::group([ 'as'=>'admin.','prefix' => 'admin','namespace'=>'Admin','middlewa
 
     Route::resource('posts','PostsController');
 
-    //Route::post('users/delete/{id}','UsersController@destroy')->name('user.destroy');
+    Route::resource('category','CategoryController');
 
+    Route::resource('media', 'MediaController');
+
+    Route::post('media/deleteall', 'MediaController@deleteMedia')->name('media.deleteall');
+
+    Route::resource('comments', 'PostCommentsController');
+
+    Route::resource('replies', 'CommentRepliesController');
+    
 });

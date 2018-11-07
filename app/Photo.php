@@ -15,10 +15,11 @@ class Photo extends Model
     public function users()
     {
         return $this->hasMany('App\User');
-    }   
+    } 
 
     public function getFileAttribute($photo)
     {
         return $this->uploads . $photo;
     }
+
 }

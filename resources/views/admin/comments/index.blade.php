@@ -1,6 +1,6 @@
 @extends('layouts.backend.app')
 
-@section('title','User Manager')
+@section('title','Comments Manager')
 
 @push('css')
     <!-- DataTables CSS -->
@@ -18,37 +18,34 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     DataTables Advanced Tables
-                    <a  class="btn btn-success btn-xs pull-right" href="{{ route('admin.category.create') }}">Add Category</a>
                 </div>
                 <!-- /.panel-heading -->
                 <div class="panel-body">
                     @include('admin.common.errors')
-
-                 
-
                     <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-user">
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Name</th>
+                                <th>Ower Post</th>
+                                <th>Body</th>
                                 <th>Created_at</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @if ($categories)
-                                @foreach ($categories as $key => $categorie)
+                            @if ($comments)
+                                @foreach ($comments as $key => $comment)
                                     <tr class="odd gradeX">
                                         <td>{{ ++$key }}</td>
+                                        <td>X</td>
                                         <td>
-                                            {{ $categorie->title }}
+                                            {{ $comment->content }}
                                         </td>
 
-                                        <td class="center">{{ $categorie->created_at->diffForHumans() }}</td>
+                                        <td class="center">{{ $comment->created_at->diffForHumans() }}</td>
 
                                         <td class="center pull-left">
-                                            <a class="btn btn-primary btn-xs pull-right" href="{{ route('admin.category.edit',['id'=>$categorie->id]) }}"> <span class="fa fa-edit"></span> Edit </a>
-                                            <form action="{{ route('admin.category.destroy',$categorie->id) }}" method="POST" >
+                                            <form action="{{ route('admin.comments.destroy',$comment->id) }}" method="POST" >
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-xs pull-right">Delete</button>

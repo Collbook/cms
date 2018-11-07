@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\PostCreateRequest;
 
+
 class PostsController extends Controller
 {
     /**
@@ -63,8 +64,7 @@ class PostsController extends Controller
         }
 
         $post->save();
-        return redirect()->back()->with('status','Created post successfully');
-        //dd($request->all());
+        return redirect()->route('admin.posts.index')->with('status','Created post successfully');
     }
 
     /**
@@ -100,7 +100,12 @@ class PostsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //return $id;
+        $this->validate($request,[
+            'title'       => 'required',
+            'category_id' => 'required',
+            'body'        => 'required'
+        ]);
+
         $post = Post::find($id);
         $post->user_id = $post->user->id;
 
@@ -117,11 +122,11 @@ class PostsController extends Controller
             {
                 unlink(public_path().$post->photo->file);
             }
-            //$user->delete();
+          
 
             $file->move('images',$name);
 
-            //$photo = new Photo;
+           
             $photo = Photo::find($post->photo->id);
             $photo->file = $name;
             $photo->save();
@@ -131,7 +136,7 @@ class PostsController extends Controller
         }
 
         $post->save();
-        return redirect()->back()->with('status','Updated post successfully');
+        return redirect()->route('admin.posts.index')->with('status','Updated post successfully');
     }
 
     /**
